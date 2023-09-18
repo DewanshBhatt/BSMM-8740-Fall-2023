@@ -1,8 +1,8 @@
 ---
 title: "BSMM-lab-1"
 subtitle: "BSMM 8740 Fall 2023"
-author: "Add your name here"
-date: "Add the date here"
+author: "Dewansh Bhatt"
+date: "September 18, 2023"
 format: html
 editor: visual
 self-contained: true
@@ -11,13 +11,40 @@ self-contained: true
 ## Setup
 
 Load packages and data:
+```{r}
+install.packages("tidyverse")
+install.packages("Lahman")
+
+```
+
 
 ```{r load-pkg-data}
 #| message: false
 library(Lahman)
+library("tidyverse")
+```
+```{r}
+install.packages("usethis")
+library("usethis")
+
 ```
 
 ## Exercises
+```{r}
+usethis::use_git_config(
+  user.name = "DewanshBhatt"
+  , user.email = "dewanshbhatt@gmail.com"
+)
+
+```
+```{r}
+usethis::create_github_token()
+```
+
+
+```{r}
+gitcreds::gitcreds_set()
+```
 
 ### Exercise 1
 
@@ -29,36 +56,105 @@ The `Teams` dataset has \_\_\_ observations and \_\_\_ variables.
 
 ### Exercise 2
 
-...
+```{r}
+mets <- Teams  %>% 
+  dplyr::filter(teamID == "NYN")
+my_mets <- mets %>% 
+  dplyr::filter(yearID>=2004 & yearID<=2012)
+my_mets %>% 
+  dplyr::select(W,L,yearID,teamID)
+```
+
 
 ### Exercise 3
+```{r}
+mets_ben <- mets_ben |>
+  dplyr::rename(RS = R)    # new name = old name
+mets_ben
 
-...
+mets_ben <- Teams |>
+  dplyr::select(teamID, yearID, RS, R, _, _) |>
+  dplyr::filter(teamID == "NYN" & yearID %in% 2004:2012)
+mets_ben
+
+```
+
+
 
 ### Exercise 4
+```{r}
+mets_ben <- mets_ben |>
+  dplyr::mutate(WPct = _)
+mets_ben
+```
 
-...
+
 
 ### Exercise 5
 
-...
+
+```{r}
+dplyr::arrange(mets_ben, _)
+
+```
 
 ### Exercise 6
 
-...
+```{r}
+dplyr::arrange(mets_ben, _)
+
+```
+
 
 ### Exercise 7
 
-...
+```{r}
+mets_ben %>% 
+  dplyr::mutate(Diff = _) |>
+  dplyr::arrange(_)
+```
+
 
 ### Exercise 8
 
-...
+```{r}
+mets_ben |>
+  dplyr::summarize(
+    num_years = _, 
+    total_W = _, 
+    total_L = _, 
+    total_WPct = _, 
+    sum_resid = _
+  )
+```
+
 
 ### Exercise 9
 
-...
+```{r}
+ggplot(data = _____, aes(x = width, y = _____)) +
+  geom_point() + 
+  labs(
+    x = "_____", 
+    y = "_____", 
+    title = "_____"
+    )
+```
+
 
 ### Exercise 10
 
-...
+```{r}
+mets_ben <- mets_ben %>% 
+  dplyr::mutate(
+    gm = ifelse(
+      yearID == _, 
+      _, 
+      ifelse(
+        yearID >= _, 
+        _, 
+        _)
+    )
+  )
+```
+
