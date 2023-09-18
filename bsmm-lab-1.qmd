@@ -70,7 +70,7 @@ my_mets %>%
 ```{r}
 
 mets_ben <- Teams |>
-  dplyr::select(teamID, yearID, RS=R, RA,G )|>
+  dplyr::select(teamID, yearID, RS=R, RA,G,W,L )|>
   dplyr::filter(teamID == "NYN" & yearID %in% 2004:2012)
 mets_ben
 
@@ -80,7 +80,11 @@ mets_ben
 ### Exercise 4
 ```{r}
 mets_ben <- mets_ben |>
-  dplyr::mutate(WPct = _)
+  dplyr::mutate(WPct = (1/(1+((RA/RS)^2))),WinPct = W/G,)
+mets_ben
+
+mets_ben <- mets_ben |>
+  dplyr::mutate(W_hat = WPct*G)
 mets_ben
 ```
 
@@ -90,14 +94,17 @@ mets_ben
 
 
 ```{r}
-dplyr::arrange(mets_ben, _)
+dplyr::filter(mets_ben,WPct>WinPct)
+dplyr::filter(mets_ben,WPct<WinPct)
+
+
 
 ```
 
 ### Exercise 6
 
 ```{r}
-dplyr::arrange(mets_ben, _)
+dplyr::arrange(mets_ben, WinPct)
 
 ```
 
@@ -106,8 +113,8 @@ dplyr::arrange(mets_ben, _)
 
 ```{r}
 mets_ben %>% 
-  dplyr::mutate(Diff = _) |>
-  dplyr::arrange(_)
+  dplyr::mutate(Diff = max(W_hat)-W_hat) |>
+  dplyr::arrange(Diff)
 ```
 
 
@@ -116,11 +123,10 @@ mets_ben %>%
 ```{r}
 mets_ben |>
   dplyr::summarize(
-    num_years = _, 
-    total_W = _, 
-    total_L = _, 
-    total_WPct = _, 
-    sum_resid = _
+    num_years = n_distinct(yearID), 
+    total_W = sum(W), 
+    total_L = sum(L), 
+    total_WPct = mean(WinPct)
   )
 ```
 
