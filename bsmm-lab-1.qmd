@@ -11,25 +11,25 @@ self-contained: true
 ## Setup
 
 Load packages and data:
+
 ```{r}
-install.packages("tidyverse")
-install.packages("Lahman")
+
 
 ```
-
 
 ```{r load-pkg-data}
 #| message: false
 library(Lahman)
 library("tidyverse")
 ```
+
 ```{r}
-install.packages("usethis")
 library("usethis")
 
 ```
 
 ## Exercises
+
 ```{r}
 usethis::use_git_config(
   user.name = "DewanshBhatt"
@@ -37,13 +37,12 @@ usethis::use_git_config(
 )
 
 ```
+
 ```{r}
 usethis::create_github_token()
 ```
 
-
 ```{r}
-gitcreds::gitcreds_set()
 ```
 
 ### Exercise 1
@@ -65,8 +64,8 @@ my_mets %>%
   dplyr::select(W,L,yearID,G)
 ```
 
-
 ### Exercise 3
+
 ```{r}
 
 mets_ben <- Teams |>
@@ -76,8 +75,8 @@ mets_ben
 
 ```
 
-
 ### Exercise 4
+
 ```{r}
 mets_ben <- mets_ben |>
   dplyr::mutate(WPct = (1/(1+((RA/RS)^2))),WinPct = W/G,)
@@ -88,10 +87,7 @@ mets_ben <- mets_ben |>
 mets_ben
 ```
 
-
-
 ### Exercise 5
-
 
 ```{r}
 dplyr::filter(mets_ben,WPct>WinPct)
@@ -108,15 +104,13 @@ dplyr::arrange(mets_ben, WinPct)
 
 ```
 
-
 ### Exercise 7
 
 ```{r}
-mets_ben %>% 
+mets_ben <- mets_ben %>% 
   dplyr::mutate(Diff = max(W_hat)-W_hat) |>
   dplyr::arrange(Diff)
 ```
-
 
 ### Exercise 8
 
@@ -126,37 +120,35 @@ mets_ben |>
     num_years = n_distinct(yearID), 
     total_W = sum(W), 
     total_L = sum(L), 
-    total_WPct = mean(WinPct)
+    total_WPct = mean(WinPct),
+    sum_resid = sum(Diff)
   )
 ```
-
-
-### Exercise 9
-
-```{r}
-ggplot(data = _____, aes(x = width, y = _____)) +
-  geom_point() + 
-  labs(
-    x = "_____", 
-    y = "_____", 
-    title = "_____"
-    )
-```
-
 
 ### Exercise 10
 
 ```{r}
 mets_ben <- mets_ben %>% 
-  dplyr::mutate(
-    gm = ifelse(
-      yearID == _, 
-      _, 
-      ifelse(
-        yearID >= _, 
-        _, 
-        _)
-    )
+  dplyr::mutate(gm = ifelse(yearID == 2004,"Jim Duquette", 
+         ifelse(yearID >= 2005 & yearID <= 2010,"Omar Minaya","Sandy Alderson"
+         )))
+print(mets_ben)
+```
+
+### Exercise 11
+
+```{r}
+manager_summary <- mets_ben %>%
+  group_by(gm) %>%
+  dplyr::summarize(
+    num_years = n(),
+    total_W = sum(W),
+    total_L = sum(L),
+    total_WPct = mean(WPct),
+    sum_resid = sum(Diff)
   )
+```
+```{r}
+print(manager_summary)
 ```
 
